@@ -25,6 +25,17 @@
 (require 'helm-locate)
 (require 'helm-files)
 
+(defgroup helm-ls-hg nil
+  "Helm completion for Hg repos."
+  :group 'helm)
+
+(defcustom helm-ls-hg-default-sources '(helm-source-ls-hg-status
+                                        helm-source-ls-hg-buffers
+                                        helm-source-hg-list-files)
+  "Default sources for `helm-hg-find-files-in-project'."
+  :group 'helm-ls-hg
+  :type '(repeat symbol))
+
 (defvaralias 'helm-c-source-hg-list-files 'helm-source-hg-list-files)
 (make-obsolete-variable 'helm-c-source-hg-list-files 'helm-source-hg-list-files "1.5.1")
 (defvaralias 'helm-c-source-ls-hg-status 'helm-source-ls-hg-status)
@@ -209,9 +220,7 @@
             :buffer-list (lambda () (helm-browse-project-get-buffers
                                      (helm-hg-root))))))
   (unwind-protect
-       (helm :sources '(helm-source-ls-hg-status
-                        helm-source-ls-hg-buffers
-                        helm-source-hg-list-files)
+       (helm :sources helm-ls-hg-default-sources
              :ff-transformer-show-only-basename nil
              :buffer "*helm hg files*")
     (setq helm-ls-hg-default-directory nil)))
